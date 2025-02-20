@@ -56,9 +56,7 @@ def login_sep(LOGIN, PASSWORD):
 def get_courses():
     driver.get("https://sep.ucas.ac.cn/portal/site/524/2412")
     sleep(10)
-    driver.get(
-        "http://sep.ucas.ac.cn/portal/site/226/xs/1/87B962125CB2D0C6FA8E3B03082C9D8BDA07DEF7528C7ADCBE4FD4B3DF3B6E70F0B731E9D6446375686330DE7CF9007B"
-    )
+    driver.find_element(By.XPATH, "//a[contains(text(), '已选课程')]").click()
     sleep(10)
 
     courses = []
