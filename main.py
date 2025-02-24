@@ -4,7 +4,6 @@ from selenium.webdriver.chrome.options import Options
 from time import sleep
 from tqdm import tqdm
 import base64
-import ddddocr
 
 
 chrome_options = Options()
@@ -14,6 +13,8 @@ driver.get("https://sep.ucas.ac.cn/")
 
 
 def get_captcha():
+    import ddddocr
+
     ele_captcha = driver.find_element(By.ID, "code")
     # get the captcha as a base64 string
     img_captcha_base64 = driver.execute_async_script(
@@ -42,15 +43,26 @@ def get_captcha():
 
 
 def login_sep(LOGIN, PASSWORD):
-    driver.set_page_load_timeout(20)
-    driver.get("https://sep.ucas.ac.cn/")
-    print("browser opened")
-    # wait until sb1 shows up
-    driver.find_element(By.ID, "userName1").send_keys(LOGIN)
-    driver.find_element(By.ID, "pwd1").send_keys(PASSWORD)
-    driver.find_element(By.ID, "certCode1").send_keys(get_captcha())
-    driver.find_element(By.ID, "sb1").click()
-    print("logged in")
+    if LOGIN == "":
+        while True:
+            if "appStore" in driver.current_url:
+                break
+            print("please log in")
+            sleep(3)
+
+    else:  # automatic
+        while True:
+            driver.set_page_load_timeout(20)
+            driver.get("https://sep.ucas.ac.cn/")
+            print("browser opened")
+            # wait until sb1 shows up
+            driver.find_element(By.ID, "userName1").send_keys(LOGIN)
+            driver.find_element(By.ID, "pwd1").send_keys(PASSWORD)
+            driver.find_element(By.ID, "certCode1").send_keys(get_captcha())
+            driver.find_element(By.ID, "sb1").click()
+
+            if "appStore" in driver.current_url:
+                break
 
 
 def get_courses():
